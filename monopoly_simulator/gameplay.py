@@ -1,6 +1,7 @@
 from monopoly_simulator import initialize_game_elements
 # from monopoly_simulator.action_choices import roll_die
 from monopoly_simulator import action_choices
+from monopoly_simulator.server_agent_serial import ServerAgent
 import numpy as np
 from monopoly_simulator import card_utility_actions
 from monopoly_simulator import background_agent_v3_1
@@ -87,6 +88,8 @@ def simulate_game_instance(game_elements, history_log_file=None, np_seed=2):
     game_elements['time_step_indicator'] = 0
 
     while num_active_players > 1:
+
+
         disable_history(
             game_elements)  # comment this out when you want history to stay. Currently, it has high memory consumption, we are working to solve the problem (most likely due to deep copy run-off).
         current_player = game_elements['players'][current_player_index]
@@ -376,8 +379,12 @@ def play_game():
     player_decision_agents['player_3'] = Agent(**background_agent_v3_1.decision_agent_methods)
     player_decision_agents['player_4'] = Agent(**background_agent_v3_1.decision_agent_methods)
 
-    game_elements = set_up_board('../monopoly_game_schema_v1-2.json',
-                                 player_decision_agents)
+    try:
+        game_elements = set_up_board('./monopoly_game_schema_v1-2.json',
+                                     player_decision_agents)
+    except:
+        game_elements = set_up_board('../monopoly_game_schema_v1-2.json',
+                                     player_decision_agents)
 
     #Comment out the above line and uncomment the piece of code to read the gameboard state from an existing json file so that
     #the game starts from a particular game state instead of initializing the gameboard with default start values.
@@ -421,18 +428,28 @@ def play_game():
             return winner
 
 
-def play_game_in_tournament(game_seed, novelty_info=False, inject_novelty_function=None):
+def play_game_in_tournament(game_seed,agent, novelty_info=False, inject_novelty_function=None):
     logger.debug('seed used: ' + str(game_seed))
     player_decision_agents = dict()
+
+    # player_decision_agents['player_1'] = Agent(**background_agent_v3_1.decision_agent_methods)
+    player_decision_agents['player_1'] = agent
+
     # for p in ['player_1','player_3']:
     #     player_decision_agents[p] = simple_decision_agent_1.decision_agent_methods
-    player_decision_agents['player_1'] = Agent(**background_agent_v3_1.decision_agent_methods)
+    # player_decision_agents['player_1'] = Agent(**background_agent_v3_1.decision_agent_methods)
+
+
     player_decision_agents['player_2'] = Agent(**background_agent_v3_1.decision_agent_methods)
     player_decision_agents['player_3'] = Agent(**background_agent_v3_1.decision_agent_methods)
     player_decision_agents['player_4'] = Agent(**background_agent_v3_1.decision_agent_methods)
 
-    game_elements = set_up_board('../monopoly_game_schema_v1-2.json',
-                                 player_decision_agents)
+    try:
+        game_elements = set_up_board('./monopoly_game_schema_v1-2.json',
+                                     player_decision_agents)
+    except:
+        game_elements = set_up_board('../monopoly_game_schema_v1-2.json',
+                                     player_decision_agents)
 
     #Comment out the above line and uncomment the piece of code to read the gameboard state from an existing json file so that
     #the game starts from a particular game state instead of initializing the gameboard with default start values.

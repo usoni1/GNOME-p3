@@ -362,7 +362,7 @@ def inject_novelty(current_gameboard, novelty_schema=None):
     '''
 
 
-def play_game():
+def play_game(random_seed = 88):
     """
     Use this function if you want to test a single game instance and control lots of things. For experiments, we will directly
     call some of the functions in gameplay from test_harness.py.
@@ -379,7 +379,7 @@ def play_game():
     except:
         print('Logging gameplay.')
 
-    logger = log_file_create('../single_tournament/seed_6.log')
+    logger = log_file_create('../single_tournament/seed_' + str(random_seed) + '.log')
     player_decision_agents = dict()
     # for p in ['player_1','player_3']:
     #     player_decision_agents[p] = simple_decision_agent_1.decision_agent_methods
@@ -398,8 +398,12 @@ def play_game():
     player_decision_agents['player_3'] = Agent(**background_agent_v3_1.decision_agent_methods)
     player_decision_agents['player_4'] = Agent(**background_agent_v3_1.decision_agent_methods)
 
-    game_elements = set_up_board('../monopoly_game_schema_v1-2.json',
-                                 player_decision_agents)
+    try:
+        game_elements = set_up_board('./monopoly_game_schema_v1-2.json',
+                                     player_decision_agents)
+    except:
+        game_elements = set_up_board('../monopoly_game_schema_v1-2.json',
+                                     player_decision_agents)
 
     # game_elements = set_up_board('monopoly_game_schema_v1-2.json',
     #                              player_decision_agents)
@@ -457,8 +461,12 @@ def play_game_in_tournament(game_seed, novelty_info=False, inject_novelty_functi
     player_decision_agents['player_3'] = Agent(**background_agent_v3_1.decision_agent_methods)
     player_decision_agents['player_4'] = Agent(**background_agent_v3_1.decision_agent_methods)
 
-    game_elements = set_up_board('../monopoly_game_schema_v1-2.json',
-                                 player_decision_agents)
+    try:
+        game_elements = set_up_board('./monopoly_game_schema_v1-2.json',
+                                     player_decision_agents)
+    except:
+        game_elements = set_up_board('../monopoly_game_schema_v1-2.json',
+                                     player_decision_agents)
 
     #Comment out the above line and uncomment the piece of code to read the gameboard state from an existing json file so that
     #the game starts from a particular game state instead of initializing the gameboard with default start values.
@@ -563,8 +571,12 @@ def play_game_in_tournament_socket(game_seed, agent1, agent2, agent3, agent4, no
     player_decision_agents['player_3'] = Agent(**agent3.decision_agent_methods)
     player_decision_agents['player_4'] = Agent(**agent4.decision_agent_methods)
 
-    game_elements = set_up_board('../monopoly_game_schema_v1-2.json',
-                                 player_decision_agents)
+    try:
+        game_elements = set_up_board('./monopoly_game_schema_v1-2.json',
+                                     player_decision_agents)
+    except:
+        game_elements = set_up_board('../monopoly_game_schema_v1-2.json',
+                                     player_decision_agents)
 
     #Comment out the above line and uncomment the piece of code to read the gameboard state from an existing json file so that
     #the game starts from a particular game state instead of initializing the gameboard with default start values.
@@ -640,5 +652,5 @@ def play_game_in_tournament_socket(game_seed, agent1, agent2, agent3, agent4, no
                     logger.debug("GAME OVER")
                     return winner
 
-
-play_game()
+if __name__ == '__main__':
+    play_game(random_seed= 33)
